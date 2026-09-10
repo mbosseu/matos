@@ -1,0 +1,94 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import { AlertForm } from "../../components/Header"
+import { SITE, formatPrice } from "../../data/nav.js"
+import { getProduct, PRODUCTS, related } from "../../data/products.js"
+
+export function getStaticPaths() {
+  return PRODUCTS.map((p) => ({ params: { slug: p.slug } }))
+}
+
+const product = getProduct(Astro.params.slug)
+if (!product) throw new Error("Produit introuvable")
+const more = related(product)
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: product.name,
+  brand: product.brand,
+  image: product.image,
+  description: product.short,
+  offers: {
+    "@type": "Offer",
+    priceCurrency: "EUR",
+    price: product.price,
+    availability: "https://schema.org/PreOrder",
+    url: `${SITE.url}/p/${product.slug}`,
+  },
+}
+const crumbs = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE.url}/` },
+    { "@type": "ListItem", position: 2, name: product.category, item: `${SITE.url}/${product.family === "mma" ? "gants-mma" : "gants-de-boxe"}` },
+    { "@type": "ListItem", position: 3, name: product.name, item: `${SITE.url}/p/${product.slug}` },
+  ],
+}
+---
+
+<Layout title={product.name} description={product.short}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(crumbs)} />
+  <main class="pdp">
+    <div class="pdp-gallery">
+      <img src={product.image} alt={product.name} />
+    </div>
+    <div class="pdp-info">
+      <p class="crumb">
+        <a href="/">Accueil</a> / <a href={`/${product.family === "mma" ? "gants-mma" : "gants-de-boxe"}`}>{product.category}</a>
+      </p>
+      <h1>{product.name}</h1>
+      <div class="cat" style="color:var(--muted)">{product.category} · {product.discipline} · {product.brand}</div>
+      <div class="price" style="margin:16px 0 4px;font-weight:500">{formatPrice(product.price)}</div>
+      <p class="price-note">Prix indicatif. La vente n’est pas encore ouverte. Aucune commande ne peut être passée.</p>
+      <p style="margin:16px 0"><span class="status-pill">Bientôt disponible</span></p>
+      <p>{product.short}</p>
+      <div style="display:flex;justify-content:space-between;font-weight:500;margin-top:24px">
+        <span>Tailles prévues</span>
+        <a href="/guides-achat/quelle-taille-de-gants-de-boxe-choisir" style="color:var(--muted)">Guide des tailles</a>
+      </div>
+      <div class="sizes">
+        {product.sizes.map((s) => <button class="size" disabled>{s}</button>)}
+      </div>
+      <p style="font-size:14px;color:var(--muted)">Achat désactivé — inscris-toi pour l’ouverture.</p>
+      <AlertForm client:load product={product.name} />
+      <div class="pdp-desc">{product.description}</div>
+      <h2 style="font-size:18px;margin:28px 0 8px">Bénéfices</h2>
+      <ul>{product.benefits.map((b) => <li>{b}</li>)}</ul>
+      <h2 style="font-size:18px;margin:28px 0 8px">Caractéristiques</h2>
+      <ul>{product.specs.map((b) => <li>{b}</li>)}</ul>
+      <h2 style="font-size:18px;margin:28px 0 8px">Utilisation</h2>
+      <p>{product.use}</p>
+      <h2 style="font-size:18px;margin:28px 0 8px">Entretien</h2>
+      <p>{product.care}</p>
+      <p><a href="/guides-achat">Voir les guides d'achat</a></p>
+    </div>
+  </main>
+  <section class="page">
+    <h2 class="page-title">Dans la même famille</h2>
+    <div class="grid">
+      {
+        more.map((p) => (
+          <a href={`/p/${p.slug}`} class="product-card">
+            <div class="thumb">
+              <img src={p.image} alt={p.name} />
+            </div>
+            <h3>{p.name}</h3>
+            <div class="price">{formatPrice(p.price)}</div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Layout>

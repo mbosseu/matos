@@ -1,0 +1,70 @@
+---
+import Layout from "../layouts/Layout.astro"
+import ListingFilters from "../components/ListingFilters.tsx"
+import { CATEGORIES, formatPrice } from "../data/nav.js"
+import { productsFor } from "../data/products.js"
+
+export function getStaticPaths() {
+  return Object.keys(CATEGORIES).map((slug) => ({ params: { slug } }))
+}
+
+const TYPE_LABEL = {
+  gants: "Gants",
+  protection: "Protections",
+  textile: "Textile",
+  accessoire: "Accessoires",
+  entrainement: "Entraînement",
+}
+
+const { slug } = Astro.params
+const cat = CATEGORIES[slug]
+if (!cat) throw new Error("Catégorie inconnue")
+const items = productsFor(slug)
+const types = [...new Set(items.map((p) => TYPE_LABEL[p.type] || p.type))]
+const crumbs = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Accueil", item: "https://www.matos-de-boxe.fr/" },
+    { "@type": "ListItem", position: 2, name: cat.h1, item: `https://www.matos-de-boxe.fr/${slug}` },
+  ],
+}
+---
+
+<Layout title={cat.title} description={cat.intro}>
+  <script type="application/ld+json" set:html={JSON.stringify(crumbs)} />
+  <main class="page">
+    <p class="crumb"><a href="/">Accueil</a> / {cat.h1}</p>
+    <div class="listing-head">
+      <div>
+        <h1 class="page-title">{cat.h1} (<span data-result-count>{items.length}</span>)</h1>
+        <p class="page-sub">{cat.intro}</p>
+      </div>
+      <div class="sort">Trier par : En vedette</div>
+    </div>
+    <ListingFilters client:load types={types} />
+    <div class="grid">
+      {
+        items.map((p) => (
+          <a href={`/p/${p.slug}`} class="product-card" data-product-type={TYPE_LABEL[p.type] || p.type}>
+            <div class="thumb">
+              <img src={p.image} alt={p.name} />
+            </div>
+            <h3>{p.name}</h3>
+            <div class="cat">{p.category}</div>
+            <div class="cat">
+              {p.colors.length} coloris · {p.brand}
+            </div>
+            <div class="price">{formatPrice(p.price)}</div>
+            <div class="price-note">Prix indicatif · Bientôt disponible</div>
+          </a>
+        ))
+      }
+    </div>
+    {
+      items.length === 0 && (
+        <p class="empty">Catalogue en cours d’intégration pour cette catégorie.</p>
+      )
+    }
+  </main>
+</Layout>

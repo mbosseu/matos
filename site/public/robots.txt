@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.matos-de-boxe.fr/sitemap-index.xml

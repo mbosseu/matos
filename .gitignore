@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+.DS_Store
+.idea/
+
+# Clone Nike / scripts locaux — pas le site de prod
+frontend/
+*.py
+requirements.txt
+site-logo-source.png
+cleanup_clone.py
+compare_screens.py
+fetch_gfonts.py
+finalize_clone.py
+mirror_site.py
+seed_products.py
+site_cloner.py
+_parse_mb.py

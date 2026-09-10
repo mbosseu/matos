@@ -1,0 +1,25 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import { GUIDES } from "../../data/guides.js"
+---
+
+<Layout
+  title="Guides d'achat boxe et MMA"
+  description="Guides pour choisir gants de boxe, gants MMA, protections et matériel de sports de combat."
+>
+  <main class="page">
+    <p class="crumb"><a href="/">Accueil</a> / Guides d'achat</p>
+    <h1 class="page-title">Guides d'achat</h1>
+    <p class="page-sub">Des textes de pratiquant, pour acheter le bon matos — pas le plus cher.</p>
+    <div class="grid" style="grid-template-columns:1fr 1fr">
+      {
+        GUIDES.map((g) => (
+          <a href={`/guides-achat/${g.slug}`} class="product-card" style="padding:8px 0">
+            <h3>{g.title}</h3>
+            <div class="cat">{g.description}</div>
+          </a>
+        ))
+      }
+    </div>
+  </main>
+</Layout>

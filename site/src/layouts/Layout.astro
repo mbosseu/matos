@@ -1,0 +1,40 @@
+---
+import Header, { CookieBanner } from "../components/Header"
+import Footer from "../components/Footer.astro"
+import { SITE } from "../data/nav.js"
+import "../styles/global.css"
+
+const {
+  title = SITE.name,
+  description = SITE.description,
+  canonical,
+} = Astro.props
+
+const pageTitle = title.includes("Matos") ? title : `${title} | ${SITE.name}`
+const url = canonical || new URL(Astro.url.pathname, SITE.url).href
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={url} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="/logo.png" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Passer au contenu principal</a>
+    <Header client:load />
+    <div id="main">
+      <slot />
+    </div>
+    <Footer />
+    <CookieBanner client:idle />
+  </body>
+</html>
