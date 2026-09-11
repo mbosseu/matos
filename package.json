@@ -2,7 +2,7 @@
   "name": "matos-de-boxe",
   "private": true,
   "engines": {
-    "node": "22.x"
+    "node": ">=22.12.0"
   },
   "scripts": {
     "build": "npm ci --prefix site && npm run build --prefix site"
