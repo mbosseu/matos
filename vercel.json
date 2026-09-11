@@ -1,7 +1,18 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": null,
-  "installCommand": "if [ -f site/package.json ]; then npm ci --prefix site; else npm ci; fi",
-  "buildCommand": "if [ -f site/package.json ]; then npm run build --prefix site && rm -rf dist && cp -r site/dist dist; else npm run build; fi",
-  "outputDirectory": "dist"
+  "services": {
+    "web": {
+      "root": "site",
+      "framework": "astro",
+      "installCommand": "npm ci",
+      "buildCommand": "npm run build",
+      "outputDirectory": "dist"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": { "service": "web" }
+    }
+  ]
 }
