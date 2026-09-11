@@ -3,5 +3,8 @@
   "private": true,
   "engines": {
     "node": "22.x"
+  },
+  "scripts": {
+    "build": "npm ci --prefix site && npm run build --prefix site"
   }
 }
