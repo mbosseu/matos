@@ -731,9 +731,10 @@ button {
   display: block;
   width: 110px;
   height: 110px;
+  max-width: none;
   object-fit: contain;
   object-position: center;
-  background: #fff;
+  background: var(--fog);
   padding: 8px;
 }
 
@@ -867,6 +868,8 @@ button {
 /* Pages */
 .page {
   padding: 24px 48px 64px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .page-title {
@@ -918,14 +921,18 @@ button {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px 16px;
+}
+
+.product-card {
+  min-width: 0;
 }
 
 .product-card .thumb {
   position: relative;
-  background: #fff;
-  aspect-ratio: 1;
+  background: var(--fog);
+  aspect-ratio: 4 / 5;
   overflow: hidden;
 }
 
@@ -934,6 +941,9 @@ button {
   inset: 0;
   width: 100%;
   height: 100%;
+  max-width: none;
+  max-height: none;
+  padding: 16px;
   object-fit: contain;
   object-position: center;
 }
@@ -979,10 +989,12 @@ button {
 .pdp-gallery .ph {
   display: block;
   width: 100%;
-  aspect-ratio: 1;
+  max-width: none;
+  aspect-ratio: 4 / 5;
   object-fit: contain;
   object-position: center;
-  background: #fff;
+  background: var(--fog);
+  padding: 24px;
 }
 
 .pdp-info {
