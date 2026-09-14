@@ -3,6 +3,14 @@ import { useEffect, useMemo, useState } from "react"
 import { NAV } from "../data/nav.js"
 import { searchProducts } from "../data/products.js"
 
+const TRENDS = [
+  { label: "Gants de boxe", href: "/gants-de-boxe" },
+  { label: "Gants MMA", href: "/gants-mma" },
+  { label: "Casque", href: "/protections-boxe" },
+  { label: "Tibias", href: "/protections-mma" },
+  { label: "Débutant", href: "/equipement-debutant" },
+]
+
 function SearchIcon() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -27,6 +35,14 @@ function BagIcon() {
   )
 }
 
+function MenuIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path stroke="currentColor" strokeWidth="1.5" d="M4 7h16M4 12h16M4 17h16" />
+    </svg>
+  )
+}
+
 export default function Header() {
   const [open, setOpen] = useState(null)
   const [search, setSearch] = useState(false)
@@ -44,6 +60,14 @@ export default function Header() {
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
   }, [])
+
+  useEffect(() => {
+    const lock = search || mobile
+    document.body.style.overflow = lock ? "hidden" : ""
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [search, mobile])
 
   const results = useMemo(() => (query ? searchProducts(query) : []), [query])
 
@@ -65,7 +89,7 @@ export default function Header() {
       <div className="header-wrap">
         <div className="header">
           <a href="/" className="logo" aria-label="Accueil Matos de boxe">
-            <img src="/logo-mark.png" alt="" />
+            <img src="/logo-mark.png" alt="" width="46" height="46" />
             <span className="logo-lockup">
               <span className="logo-name">
                 MATOS-DE-BOXE.<span className="fr">FR</span>
@@ -73,7 +97,7 @@ export default function Header() {
               <span className="logo-tag">L'équipement des combattants</span>
             </span>
           </a>
-          <nav className="nav" onMouseLeave={() => setOpen(null)}>
+          <nav className="nav" onMouseLeave={() => setOpen(null)} aria-label="Catégories">
             {NAV.map((item) => (
               <a
                 key={item.id}
@@ -81,24 +105,26 @@ export default function Header() {
                 className={`nav-item${open === item.id ? " is-open" : ""}`}
                 onMouseEnter={() => setOpen(item.id)}
                 onFocus={() => setOpen(item.id)}
+                aria-expanded={open === item.id}
+                aria-haspopup="true"
               >
                 {item.label}
               </a>
             ))}
           </nav>
           <div className="utils">
-            <button className="search-pill" onClick={() => setSearch(true)} aria-label="Rechercher">
+            <button type="button" className="search-pill" onClick={() => setSearch(true)} aria-label="Rechercher">
               <SearchIcon />
               <span>Rechercher</span>
             </button>
-            <a href="/guides-achat" className="icon-btn" aria-label="Favoris / alertes">
+            <a href="/guides-achat" className="icon-btn" aria-label="Guides d'achat">
               <HeartIcon />
             </a>
             <a href="/panier" className="icon-btn" aria-label="Panier (inactif)">
               <BagIcon />
             </a>
-            <button className="icon-btn burger" aria-label="Menu" onClick={() => setMobile(true)}>
-              ☰
+            <button type="button" className="icon-btn burger" aria-label="Ouvrir le menu" onClick={() => setMobile(true)}>
+              <MenuIcon />
             </button>
           </div>
         </div>
@@ -123,7 +149,7 @@ export default function Header() {
       {open && <div className="backdrop" onMouseEnter={() => setOpen(null)} />}
 
       {search && (
-        <div className="search-overlay">
+        <div className="search-overlay" role="dialog" aria-modal="true" aria-label="Recherche">
           <div className="search-bar">
             <SearchIcon />
             <input
@@ -133,15 +159,15 @@ export default function Header() {
               onChange={(e) => setQuery(e.target.value)}
               aria-label="Rechercher des produits"
             />
-            <button className="search-cancel" onClick={() => setSearch(false)}>
+            <button type="button" className="search-cancel" onClick={() => setSearch(false)}>
               Annuler
             </button>
           </div>
           <div className="search-body">
             <h3>Tendances</h3>
-            {["Gants de boxe", "Gants MMA", "Casque", "Tibias", "Débutant"].map((t) => (
-              <a key={t} href={`/${t.toLowerCase().includes("mma") ? "gants-mma" : t.toLowerCase().includes("gants") ? "gants-de-boxe" : "matos-de-boxe"}`}>
-                {t}
+            {TRENDS.map((t) => (
+              <a key={t.href} href={t.href} onClick={() => setSearch(false)}>
+                {t.label}
               </a>
             ))}
             {query && (
@@ -160,8 +186,8 @@ export default function Header() {
       )}
 
       {mobile && (
-        <div className="drawer">
-          <button className="icon-btn" onClick={() => setMobile(false)} aria-label="Fermer">
+        <div className="drawer" role="dialog" aria-modal="true" aria-label="Menu">
+          <button type="button" className="icon-btn" onClick={() => setMobile(false)} aria-label="Fermer le menu">
             ×
           </button>
           {NAV.map((item) => (
@@ -169,6 +195,11 @@ export default function Header() {
               {item.label}
             </a>
           ))}
+          <a href="/guides-achat">Guides d'achat</a>
+          <a href="/contact">Contact</a>
+          <button type="button" className="drawer-search" onClick={() => { setMobile(false); setSearch(true) }}>
+            Rechercher
+          </button>
         </div>
       )}
     </>
@@ -182,14 +213,17 @@ export function CookieBanner() {
   }, [])
   if (!show) return null
   return (
-    <div className="cookie" role="dialog" aria-label="Cookies">
+    <div className="cookie" role="dialog" aria-modal="true" aria-labelledby="cookie-title">
       <div className="cookie-card">
+        <h2 id="cookie-title" className="cookie-title">Cookies</h2>
         <p>
           Nous utilisons des cookies nécessaires au fonctionnement du site. Les cookies d’analyse ne seront activés
-          qu’avec ton accord, une fois Google Analytics branché.
+          qu’avec ton accord, une fois Google Analytics branché. Détails dans la{" "}
+          <a href="/confidentialite">politique de confidentialité</a>.
         </p>
         <div className="cookie-actions">
           <button
+            type="button"
             className="btn btn-dark"
             onClick={() => {
               localStorage.setItem("matos-cookies", "0")
@@ -199,6 +233,7 @@ export function CookieBanner() {
             Tout refuser
           </button>
           <button
+            type="button"
             className="btn btn-accent"
             onClick={() => {
               localStorage.setItem("matos-cookies", "1")
@@ -224,14 +259,10 @@ export function AlertForm({ product }) {
         setOk(true)
       }}
     >
-      <input
-        required
-        type="email"
-        name="email"
-        placeholder="Ton e-mail"
-        aria-label="E-mail"
-        style={{ height: 48, borderRadius: 30, border: "1px solid #e5e5e5", padding: "0 18px", fontSize: 16 }}
-      />
+      <label className="alert-label">
+        E-mail
+        <input required type="email" name="email" autoComplete="email" placeholder="Ton e-mail" aria-label="E-mail" />
+      </label>
       <button className="btn btn-accent btn-lg" type="submit">
         Prévenez-moi de l’arrivée
       </button>

@@ -246,7 +246,7 @@ export const CATEGORIES = {
     title: "Arts martiaux — kimonos, ceintures, protections",
     h1: "Arts martiaux",
     intro: "Matériel d’arts martiaux : grappling, kimono, ceintures et protections. Catalogue en cours d’enrichissement.",
-    filter: (p) => p.family === "arts-martiaux" || p.family === "mma",
+    filter: (p) => p.family === "arts-martiaux",
   },
   "textile-combat": {
     slug: "textile-combat",
@@ -273,4 +273,13 @@ export const CATEGORIES = {
 
 export function formatPrice(n) {
   return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(n)
+}
+
+export function categoryHref(product) {
+  if (product.type === "gants") return product.family === "mma" ? "/gants-mma" : "/gants-de-boxe"
+  if (product.type === "protection") return product.family === "mma" ? "/protections-mma" : "/protections-boxe"
+  if (product.type === "textile") return "/textile-combat"
+  if (product.type === "accessoire") return "/accessoires-boxe"
+  if (product.type === "entrainement") return "/sacs-de-frappe"
+  return "/matos-de-boxe"
 }

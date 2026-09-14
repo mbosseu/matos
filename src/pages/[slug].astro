@@ -33,14 +33,13 @@ const crumbs = {
 
 <Layout title={cat.title} description={cat.intro}>
   <script type="application/ld+json" set:html={JSON.stringify(crumbs)} />
-  <main class="page">
+  <div class="page">
     <p class="crumb"><a href="/">Accueil</a> / {cat.h1}</p>
     <div class="listing-head">
       <div>
         <h1 class="page-title">{cat.h1} (<span data-result-count>{items.length}</span>)</h1>
         <p class="page-sub">{cat.intro}</p>
       </div>
-      <div class="sort">Trier par : En vedette</div>
     </div>
     <ListingFilters client:load types={types} />
     <div class="grid">
@@ -48,7 +47,7 @@ const crumbs = {
         items.map((p) => (
           <a href={`/p/${p.slug}`} class="product-card" data-product-type={TYPE_LABEL[p.type] || p.type}>
             <div class="thumb">
-              <img src={p.image} alt={p.name} />
+              <img src={p.image} alt={p.name} loading="lazy" decoding="async" />
             </div>
             <h3>{p.name}</h3>
             <div class="cat">{p.category}</div>
@@ -66,5 +65,5 @@ const crumbs = {
         <p class="empty">Catalogue en cours d’intégration pour cette catégorie.</p>
       )
     }
-  </main>
+  </div>
 </Layout>

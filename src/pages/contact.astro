@@ -1,17 +1,13 @@
 ---
 import Layout from "../layouts/Layout.astro"
+import ContactForm from "../components/ContactForm.tsx"
 ---
 
 <Layout title="Contact" description="Contacter Matos de boxe pour une question catalogue, partenariat ou ouverture de la boutique.">
-  <main class="page">
+  <div class="page">
     <h1 class="page-title">Contact</h1>
     <p class="page-sub">Une question sur le matos, une salle à équiper, un partenariat Metal Boxe : écris-nous.</p>
-    <form class="form-grid" method="post" action="#">
-      <input required name="name" placeholder="Nom" />
-      <input required type="email" name="email" placeholder="E-mail" />
-      <textarea required name="message" rows="6" placeholder="Message"></textarea>
-      <button class="btn btn-accent btn-lg" type="submit">Envoyer</button>
-    </form>
+    <ContactForm client:load />
     <p class="price-note">Le formulaire sera branché sur la boîte mail de la boutique avant l’ouverture des ventes.</p>
-  </main>
+  </div>
 </Layout>

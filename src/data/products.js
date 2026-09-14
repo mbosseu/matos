@@ -553,7 +553,11 @@ export function getProduct(slug) {
 }
 
 export function related(product, n = 4) {
-  return PRODUCTS.filter((p) => p.slug !== product.slug && (p.family === product.family || p.type === product.type)).slice(0, n)
+  const others = PRODUCTS.filter((p) => p.slug !== product.slug)
+  const sameTypeFamily = others.filter((p) => p.type === product.type && p.family === product.family)
+  const sameType = others.filter((p) => p.type === product.type && p.family !== product.family)
+  const sameFamily = others.filter((p) => p.family === product.family && p.type !== product.type)
+  return [...sameTypeFamily, ...sameType, ...sameFamily].slice(0, n)
 }
 
 export function searchProducts(q) {
@@ -563,6 +567,10 @@ export function searchProducts(q) {
     (p) =>
       p.name.toLowerCase().includes(s) ||
       p.category.toLowerCase().includes(s) ||
-      p.discipline.toLowerCase().includes(s),
+      p.discipline.toLowerCase().includes(s) ||
+      p.brand.toLowerCase().includes(s) ||
+      p.type.toLowerCase().includes(s) ||
+      p.family.toLowerCase().includes(s) ||
+      p.short.toLowerCase().includes(s),
   )
 }

@@ -27,8 +27,8 @@ export default function HeroCarousel({ slides }) {
       {slides.map((slide, idx) => {
         const Title = idx === 0 ? "h1" : "h2"
         return (
-          <div key={slide.id} className={`hero-slide${idx === i ? " is-active" : ""}`} aria-hidden={idx !== i} inert={idx !== i}>
-            <img src={slide.image} alt={slide.alt} />
+          <div key={slide.id} className={`hero-slide${idx === i ? " is-active" : ""}`} aria-hidden={idx !== i} {...(idx !== i ? { inert: true } : {})}>
+            <img src={slide.image} alt={slide.alt} fetchPriority={idx === 0 ? "high" : "low"} loading={idx === 0 ? "eager" : "lazy"} />
             <div className="hero-copy">
               <Title>{slide.title}</Title>
               <p>{slide.text}</p>

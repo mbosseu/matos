@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro"
 import { AlertForm } from "../../components/Header"
-import { SITE, formatPrice } from "../../data/nav.js"
+import { SITE, formatPrice, categoryHref } from "../../data/nav.js"
 import { getProduct, PRODUCTS, related } from "../../data/products.js"
 
 export function getStaticPaths() {
@@ -24,6 +24,7 @@ const jsonLd = {
     price: product.price,
     availability: "https://schema.org/PreOrder",
     url: `${SITE.url}/p/${product.slug}`,
+    seller: { "@type": "Organization", name: SITE.name },
   },
 }
 const crumbs = {
@@ -31,7 +32,7 @@ const crumbs = {
   "@type": "BreadcrumbList",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE.url}/` },
-    { "@type": "ListItem", position: 2, name: product.category, item: `${SITE.url}/${product.family === "mma" ? "gants-mma" : "gants-de-boxe"}` },
+    { "@type": "ListItem", position: 2, name: product.category, item: `${SITE.url}${categoryHref(product)}` },
     { "@type": "ListItem", position: 3, name: product.name, item: `${SITE.url}/p/${product.slug}` },
   ],
 }
@@ -40,13 +41,13 @@ const crumbs = {
 <Layout title={product.name} description={product.short}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <script type="application/ld+json" set:html={JSON.stringify(crumbs)} />
-  <main class="pdp">
+  <div class="pdp">
     <div class="pdp-gallery">
-      <img src={product.image} alt={product.name} />
+      <img src={product.image} alt={product.name} fetchpriority="high" />
     </div>
     <div class="pdp-info">
       <p class="crumb">
-        <a href="/">Accueil</a> / <a href={`/${product.family === "mma" ? "gants-mma" : "gants-de-boxe"}`}>{product.category}</a>
+        <a href="/">Accueil</a> / <a href={categoryHref(product)}>{product.category}</a>
       </p>
       <h1>{product.name}</h1>
       <div class="cat" style="color:var(--muted)">{product.category} · {product.discipline} · {product.brand}</div>
@@ -56,7 +57,11 @@ const crumbs = {
       <p>{product.short}</p>
       <div style="display:flex;justify-content:space-between;font-weight:500;margin-top:24px">
         <span>Tailles prévues</span>
-        <a href="/guides-achat/quelle-taille-de-gants-de-boxe-choisir" style="color:var(--muted)">Guide des tailles</a>
+        {product.type === "gants" && (
+          <a href={product.family === "mma" ? "/guides-achat/gants-mma-ou-gants-de-boxe" : "/guides-achat/quelle-taille-de-gants-de-boxe-choisir"} style="color:var(--muted)">
+            Guide des tailles
+          </a>
+        )}
       </div>
       <div class="sizes">
         {product.sizes.map((s) => <button class="size" disabled>{s}</button>)}
@@ -74,7 +79,7 @@ const crumbs = {
       <p>{product.care}</p>
       <p><a href="/guides-achat">Voir les guides d'achat</a></p>
     </div>
-  </main>
+  </div>
   <section class="page">
     <h2 class="page-title">Dans la même famille</h2>
     <div class="grid">
@@ -82,7 +87,7 @@ const crumbs = {
         more.map((p) => (
           <a href={`/p/${p.slug}`} class="product-card">
             <div class="thumb">
-              <img src={p.image} alt={p.name} />
+              <img src={p.image} alt={p.name} loading="lazy" decoding="async" />
             </div>
             <h3>{p.name}</h3>
             <div class="price">{formatPrice(p.price)}</div>

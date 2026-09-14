@@ -91,7 +91,7 @@ const orgLd = {
     {
       featured.map((c) => (
         <article class="card-feature">
-          <img src={c.p.image} alt={`${c.eyebrow} — ${c.p.name}`} />
+          <img src={c.p.image} alt={`${c.eyebrow} — ${c.p.name}`} loading="lazy" decoding="async" />
           <div class="copy">
             <div class="eyebrow">{c.eyebrow}</div>
             <h3>{c.title}</h3>
@@ -107,7 +107,7 @@ const orgLd = {
   </section>
 
   <section class="banner">
-    <img src={PRODUCTS.find((p) => p.slug === "gants-mma-combat-legacy").image} alt="Gants MMA Legacy Metal Boxe" />
+    <img src={PRODUCTS.find((p) => p.slug === "gants-mma-combat-legacy").image} alt="Gants MMA Legacy Metal Boxe" loading="lazy" decoding="async" />
     <div class="copy">
       <h2>
         Gants MMA Legacy
@@ -125,7 +125,7 @@ const orgLd = {
       {
         iconic.map((item) => (
           <a class="iconic-item" href={item.href}>
-            <img src={item.img} alt={item.label} />
+            <img src={item.img} alt={item.label} loading="lazy" decoding="async" />
             <span>{item.label}</span>
           </a>
         ))

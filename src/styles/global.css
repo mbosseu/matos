@@ -73,6 +73,22 @@ button {
 .skip {
   position: absolute;
   left: -999px;
+  top: 0;
+  z-index: 400;
+  background: var(--black);
+  color: var(--white);
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.skip:focus {
+  left: 16px;
+  top: 16px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
 }
 
 /* ---------- Preheader ---------- */
@@ -371,7 +387,6 @@ button {
   border-radius: 24px;
   padding: 0 20px;
   font-size: 16px;
-  outline: none;
 }
 
 .search-cancel {
@@ -1001,9 +1016,13 @@ button {
   border-color: var(--black);
 }
 
-.size.on {
-  border-color: var(--black);
-  box-shadow: inset 0 0 0 1px var(--black);
+.size:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.size:disabled:hover {
+  border-color: var(--line);
 }
 
 .pdp-actions {
@@ -1108,6 +1127,15 @@ button {
   padding: 14px 0;
 }
 
+.drawer-search {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-size: 24px;
+  font-weight: 500;
+  padding: 14px 0;
+}
+
 @media (max-width: 960px) {
   .preheader {
     display: none;
@@ -1129,9 +1157,21 @@ button {
   .nav {
     display: none;
   }
-  .search-pill span,
-  .search-pill {
+  .search-pill span {
     display: none;
+  }
+  .search-pill {
+    display: grid;
+    place-items: center;
+    min-width: 36px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: transparent;
+    border-radius: 50%;
+  }
+  .search-pill:hover {
+    background: var(--fog);
   }
   .burger {
     display: grid;
@@ -1199,6 +1239,9 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   .hero-slide {
     transition: none;
   }
@@ -1251,11 +1294,45 @@ button {
   max-width: 480px;
 }
 
+.form-grid label,
+.alert-label {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .form-grid input,
-.form-grid textarea {
+.form-grid textarea,
+.alert-label input {
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 12px 14px;
   font-size: 16px;
   font-family: inherit;
+  width: 100%;
+}
+
+.alert-label input {
+  height: 48px;
+  border-radius: 30px;
+  padding: 0 18px;
+}
+
+.actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.cookie-title {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.cookie-card a {
+  color: var(--orange);
+  text-decoration: underline;
 }

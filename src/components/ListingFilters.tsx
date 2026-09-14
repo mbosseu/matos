@@ -20,9 +20,15 @@ export default function ListingFilters({ types }) {
   if (chips.length < 3) return null
 
   return (
-    <div className="filters" role="tablist" aria-label="Filtrer le catalogue">
+    <div className="filters" role="group" aria-label="Filtrer le catalogue">
       {chips.map((t) => (
-        <button key={t} type="button" className={`chip${filter === t ? " on" : ""}`} onClick={() => setFilter(t)}>
+        <button
+          key={t}
+          type="button"
+          className={`chip${filter === t ? " on" : ""}`}
+          aria-pressed={filter === t}
+          onClick={() => setFilter(t)}
+        >
           {t}
         </button>
       ))}

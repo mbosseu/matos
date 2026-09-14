@@ -25,9 +25,9 @@ const html = toHtml(guide.body)
 ---
 
 <Layout title={guide.title} description={guide.description}>
-  <main class="page">
+  <div class="page">
     <p class="crumb"><a href="/">Accueil</a> / <a href="/guides-achat">Guides</a></p>
     <h1 class="page-title">{guide.title}</h1>
     <div class="prose" set:html={html} />
-  </main>
+  </div>
 </Layout>
