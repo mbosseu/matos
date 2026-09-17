@@ -273,7 +273,8 @@ button {
   border-radius: 24px;
   height: 40px;
   padding: 0 14px 0 8px;
-  min-width: 180px;
+  min-width: 0;
+  max-width: 200px;
 }
 
 .search-pill:hover {
@@ -283,6 +284,9 @@ button {
 .search-pill span {
   color: var(--black);
   font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .icon-btn {
@@ -476,22 +480,26 @@ button {
   position: relative;
   background: #111;
   color: var(--white);
-  min-height: min(78vh, 820px);
+  min-height: min(70vh, 720px);
   overflow: hidden;
 }
 
 .hero-slide {
   position: absolute;
   inset: 0;
-  min-height: min(78vh, 820px);
+  min-height: min(70vh, 720px);
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.7s ease;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+  z-index: 0;
 }
 
 .hero-slide.is-active {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
+  z-index: 1;
 }
 
 .hero-slide img {
@@ -504,7 +512,7 @@ button {
   object-fit: contain;
   object-position: center;
   background: var(--fog);
-  padding: clamp(16px, 3vh, 40px) clamp(16px, 2.4vw, 40px);
+  padding: clamp(20px, 3.2vh, 48px) clamp(20px, 2.8vw, 48px);
 }
 
 .hero-slide::before {
@@ -521,27 +529,28 @@ button {
 
 .hero-copy {
   position: absolute;
-  left: 48px;
-  bottom: 72px;
-  max-width: 640px;
+  left: clamp(24px, 3.5vw, 56px);
+  bottom: clamp(48px, 8vh, 80px);
+  max-width: min(560px, 42vw);
   z-index: 2;
 }
 
 .hero-copy h1,
 .hero-copy h2 {
   margin: 0;
-  font-size: clamp(40px, 5.6vw, 72px);
+  font-size: clamp(36px, 5vw, 64px);
   font-weight: 900;
   letter-spacing: -0.03em;
-  line-height: 0.92;
+  line-height: 0.94;
   text-transform: uppercase;
 }
 
 .hero-copy p {
-  margin: 14px 0 18px;
+  margin: 14px 0 20px;
   font-size: 16px;
   font-weight: 400;
-  max-width: 520px;
+  max-width: 42ch;
+  line-height: 1.45;
 }
 
 .hero-dots {
@@ -595,6 +604,7 @@ button {
 .card-feature {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   min-height: 0;
   overflow: hidden;
   color: var(--white);
@@ -604,53 +614,65 @@ button {
 .card-feature img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  height: clamp(260px, 36vw, 420px);
   max-width: none;
   object-fit: contain;
   object-position: center;
   background: var(--fog);
-  padding: 24px;
+  padding: clamp(16px, 2vw, 28px);
 }
 
 .card-feature .copy {
-  padding: 24px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 22px 24px 26px;
+  flex: 1;
 }
 
 .card-feature .eyebrow {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
-  margin-bottom: 6px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .card-feature h3 {
-  margin: 0 0 16px;
-  font-size: clamp(22px, 2.4vw, 32px);
+  margin: 0;
+  font-size: clamp(20px, 2vw, 28px);
   font-weight: 500;
   letter-spacing: -0.02em;
-  line-height: 1.15;
-  max-width: 18ch;
+  line-height: 1.2;
+  max-width: 20ch;
 }
 
 .card-feature .actions {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.card-feature .actions .btn {
+  align-self: flex-start;
+  width: auto;
 }
 
 /* Full banner */
 .banner {
   display: grid;
-  grid-template-columns: minmax(280px, 520px) 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
   margin: 12px;
   color: var(--white);
   background: #111;
   overflow: hidden;
-  min-height: min(62vh, 620px);
 }
 
 .banner img {
   width: 100%;
-  height: min(62vh, 620px);
+  height: 100%;
+  min-height: clamp(320px, 48vh, 520px);
   max-width: none;
   object-fit: contain;
   object-position: center;
@@ -661,34 +683,44 @@ button {
 .banner .copy {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 48px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 4px;
+  padding: clamp(28px, 4vw, 56px);
   text-align: left;
 }
 
 .banner h2 {
   margin: 0;
-  font-size: clamp(28px, 4.4vw, 56px);
+  font-size: clamp(28px, 3.8vw, 48px);
   font-weight: 900;
   letter-spacing: -0.03em;
-  line-height: 0.95;
+  line-height: 0.98;
   text-transform: uppercase;
+  max-width: 14ch;
 }
 
 .banner p {
-  margin: 12px 0 16px;
+  margin: 12px 0 18px;
   font-size: 16px;
+  max-width: 36ch;
+  line-height: 1.45;
+}
+
+.banner .btn {
+  width: auto;
+  align-self: flex-start;
 }
 
 /* Iconic */
 .iconic {
-  padding: 72px 24px 48px;
+  padding: 64px 24px 48px;
   text-align: center;
 }
 
 .iconic h2 {
-  margin: 0 0 48px;
-  font-size: clamp(36px, 5vw, 64px);
+  margin: 0 0 40px;
+  font-size: clamp(32px, 4.5vw, 56px);
   font-weight: 900;
   letter-spacing: -0.035em;
   text-transform: uppercase;
@@ -696,8 +728,8 @@ button {
 
 .iconic-grid {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 28px 12px;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 24px 16px;
   max-width: 1280px;
   margin: 0 auto;
 }
@@ -706,19 +738,20 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  min-width: 0;
 }
 
 .iconic-item img {
   display: block;
-  width: 112px;
+  width: 100%;
+  max-width: 120px;
   aspect-ratio: 4 / 5;
   height: auto;
-  max-width: none;
   object-fit: contain;
   object-position: center;
   background: var(--fog);
-  padding: 8px;
+  padding: 10px;
 }
 
 .iconic-item span {
@@ -1186,9 +1219,13 @@ button {
     right: 20px;
     max-width: none;
   }
+  .hero,
+  .hero-slide {
+    min-height: min(78vh, 680px);
+  }
   .hero-slide img {
     width: 100%;
-    height: 56%;
+    height: 52%;
     left: 0;
     right: 0;
     padding: 20px 16px 12px;
@@ -1199,6 +1236,9 @@ button {
     top: auto;
     bottom: 0;
     background: #111;
+  }
+  .card-feature img {
+    height: clamp(220px, 42vw, 320px);
   }
   .page,
   .pdp,
@@ -1211,15 +1251,16 @@ button {
   }
   .banner {
     grid-template-columns: 1fr;
-    min-height: 0;
   }
   .banner img {
     min-height: 0;
-    height: auto;
-    aspect-ratio: 4 / 5;
+    height: clamp(260px, 70vw, 360px);
   }
   .banner .copy {
     padding: 28px 20px 32px;
+  }
+  .iconic-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -1233,10 +1274,16 @@ button {
     grid-template-columns: 1fr;
   }
   .hero-slide img {
-    height: 48%;
+    height: 46%;
+  }
+  .card-feature img {
+    height: 240px;
   }
   .card-feature .copy {
-    padding: 20px;
+    padding: 18px 16px 20px;
+  }
+  .iconic-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .hero-brand {
     grid-template-columns: 1fr;
