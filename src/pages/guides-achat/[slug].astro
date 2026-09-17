@@ -1,6 +1,8 @@
 ---
 import Layout from "../../layouts/Layout.astro"
 import { GUIDES } from "../../data/guides.js"
+import { SITE } from "../../data/nav.js"
+import { absoluteUrl, articleLd, breadcrumbLd, faqLd } from "../../data/seo.js"
 
 export function getStaticPaths() {
   return GUIDES.map((g) => ({ params: { slug: g.slug } }))
@@ -21,13 +23,67 @@ function toHtml(md) {
     .join("")
 }
 
+/** Extract **Question?** style or bold lead sentences as light FAQ when possible */
+function extractFaqs(body) {
+  const faqs = []
+  const blocks = body.split(/\n\n+/)
+  for (const block of blocks) {
+    const m = block.match(/^\*\*([^*?]+\?)\*\*\s*([\s\S]+)/)
+    if (m) {
+      faqs.push({
+        q: m[1].trim(),
+        a: m[2].replace(/\*\*/g, "").replace(/\[(.*?)\]\((.*?)\)/g, "$1").trim(),
+      })
+    }
+  }
+  return faqs.slice(0, 6)
+}
+
 const html = toHtml(guide.body)
+const related = GUIDES.filter((g) => g.slug !== guide.slug).slice(0, 4)
+const faqs = extractFaqs(guide.body)
+const pageUrl = absoluteUrl(`/guides-achat/${guide.slug}`)
+const crumbs = breadcrumbLd([
+  { name: "Accueil", item: `${SITE.url}/` },
+  { name: "Guides d'achat", item: absoluteUrl("/guides-achat") },
+  { name: guide.title, item: pageUrl },
+])
+const article = articleLd(guide)
+const faqSchema = faqLd(faqs)
 ---
 
-<Layout title={guide.title} description={guide.description}>
-  <div class="page">
-    <p class="crumb"><a href="/">Accueil</a> / <a href="/guides-achat">Guides</a></p>
+<Layout title={`${guide.title} | Guide`} description={guide.description}>
+  <script type="application/ld+json" set:html={JSON.stringify(crumbs)} />
+  <script type="application/ld+json" set:html={JSON.stringify(article)} />
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+  <article class="page">
+    <p class="crumb">
+      <a href="/">Accueil</a> / <a href="/guides-achat">Guides d'achat</a> / {guide.title}
+    </p>
     <h1 class="page-title">{guide.title}</h1>
+    <p class="page-sub">{guide.description}</p>
     <div class="prose" set:html={html} />
-  </div>
+
+    {
+      related.length > 0 && (
+        <section class="seo-block">
+          <h2>Autres guides utiles</h2>
+          <ul class="seo-links">
+            {related.map((g) => (
+              <li>
+                <a href={`/guides-achat/${g.slug}`}>{g.title}</a>
+              </li>
+            ))}
+          </ul>
+          <p style="margin-top:16px">
+            <a href="/gants-de-boxe">Voir les gants de boxe</a>
+            {" · "}
+            <a href="/gants-mma">Voir les gants MMA</a>
+            {" · "}
+            <a href="/equipement-debutant">Équipement débutant</a>
+          </p>
+        </section>
+      )
+    }
+  </article>
 </Layout>

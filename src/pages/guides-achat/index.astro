@@ -1,16 +1,41 @@
 ---
 import Layout from "../../layouts/Layout.astro"
 import { GUIDES } from "../../data/guides.js"
+import { SITE } from "../../data/nav.js"
+import { absoluteUrl, breadcrumbLd } from "../../data/seo.js"
+
+const crumbs = breadcrumbLd([
+  { name: "Accueil", item: `${SITE.url}/` },
+  { name: "Guides d'achat", item: absoluteUrl("/guides-achat") },
+])
+
+const itemList = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Guides d'achat boxe et MMA",
+  itemListElement: GUIDES.map((g, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    url: absoluteUrl(`/guides-achat/${g.slug}`),
+    name: g.title,
+  })),
+}
 ---
 
 <Layout
-  title="Guides d'achat boxe et MMA"
-  description="Guides pour choisir gants de boxe, gants MMA, protections et matériel de sports de combat."
+  title="Guides d'achat boxe et MMA — choisir son matos"
+  description="Guides pour choisir gants de boxe, gants MMA, protections, sacs de frappe et matériel de sports de combat. Conseils de pratiquant, France entière."
 >
+  <script type="application/ld+json" set:html={JSON.stringify(crumbs)} />
+  <script type="application/ld+json" set:html={JSON.stringify(itemList)} />
   <div class="page">
     <p class="crumb"><a href="/">Accueil</a> / Guides d'achat</p>
-    <h1 class="page-title">Guides d'achat</h1>
-    <p class="page-sub">Des textes de pratiquant, pour acheter le bon matos — pas le plus cher.</p>
+    <h1 class="page-title">Guides d'achat boxe et MMA</h1>
+    <p class="page-sub">
+      Des textes de pratiquant pour acheter le bon matos — tailles, usages, erreurs à éviter. Puis retourne aux
+      <a href="/gants-de-boxe">gants de boxe</a>, <a href="/gants-mma">gants MMA</a> ou
+      <a href="/equipement-debutant">équipement débutant</a>.
+    </p>
     <div class="grid" style="grid-template-columns:1fr 1fr">
       {
         GUIDES.map((g) => (

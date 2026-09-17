@@ -3,6 +3,14 @@ import Layout from "../../layouts/Layout.astro"
 import { AlertForm } from "../../components/Header"
 import { SITE, formatPrice, categoryHref } from "../../data/nav.js"
 import { getProduct, PRODUCTS, related } from "../../data/products.js"
+import { GUIDES } from "../../data/guides.js"
+import {
+  absoluteUrl,
+  breadcrumbLd,
+  guidesForProduct,
+  productSeoDescription,
+  productSeoTitle,
+} from "../../data/seo.js"
 
 export function getStaticPaths() {
   return PRODUCTS.map((p) => ({ params: { slug: p.slug } }))
@@ -11,43 +19,54 @@ export function getStaticPaths() {
 const product = getProduct(Astro.params.slug)
 if (!product) throw new Error("Produit introuvable")
 const more = related(product)
+const catHref = categoryHref(product)
+const pageUrl = absoluteUrl(`/p/${product.slug}`)
+const guideList = guidesForProduct(product)
+  .map((s) => GUIDES.find((g) => g.slug === s))
+  .filter(Boolean)
+  .slice(0, 4)
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Product",
   name: product.name,
-  brand: product.brand,
-  image: product.image,
-  description: product.short,
+  sku: product.slug,
+  brand: { "@type": "Brand", name: product.brand },
+  image: [product.image],
+  description: product.description.replace(/\s+/g, " ").trim().slice(0, 5000),
+  category: product.category,
   offers: {
     "@type": "Offer",
     priceCurrency: "EUR",
-    price: product.price,
+    price: String(product.price),
     availability: "https://schema.org/PreOrder",
-    url: `${SITE.url}/p/${product.slug}`,
-    seller: { "@type": "Organization", name: SITE.name },
+    url: pageUrl,
+    seller: { "@type": "Organization", name: SITE.name, url: SITE.url },
   },
 }
-const crumbs = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE.url}/` },
-    { "@type": "ListItem", position: 2, name: product.category, item: `${SITE.url}${categoryHref(product)}` },
-    { "@type": "ListItem", position: 3, name: product.name, item: `${SITE.url}/p/${product.slug}` },
-  ],
-}
+const crumbs = breadcrumbLd([
+  { name: "Accueil", item: `${SITE.url}/` },
+  { name: product.category, item: absoluteUrl(catHref) },
+  { name: product.name, item: pageUrl },
+])
 ---
 
-<Layout title={product.name} description={product.short}>
+<Layout title={productSeoTitle(product)} description={productSeoDescription(product)} ogImage={product.image}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <script type="application/ld+json" set:html={JSON.stringify(crumbs)} />
   <div class="pdp">
     <div class="pdp-gallery">
-      <img src={product.image} alt={product.name} fetchpriority="high" />
+      <img
+        src={product.image}
+        alt={`${product.name} ${product.brand} — ${product.category} ${product.discipline}`}
+        fetchpriority="high"
+        width="800"
+        height="1000"
+      />
     </div>
     <div class="pdp-info">
       <p class="crumb">
-        <a href="/">Accueil</a> / <a href={categoryHref(product)}>{product.category}</a>
+        <a href="/">Accueil</a> / <a href={catHref}>{product.category}</a>
       </p>
       <h1>{product.name}</h1>
       <div class="cat" style="color:var(--muted)">{product.category} · {product.discipline} · {product.brand}</div>
@@ -57,11 +76,20 @@ const crumbs = {
       <p>{product.short}</p>
       <div style="display:flex;justify-content:space-between;font-weight:500;margin-top:24px">
         <span>Tailles prévues</span>
-        {product.type === "gants" && (
-          <a href={product.family === "mma" ? "/guides-achat/gants-mma-ou-gants-de-boxe" : "/guides-achat/quelle-taille-de-gants-de-boxe-choisir"} style="color:var(--muted)">
-            Guide des tailles
-          </a>
-        )}
+        {
+          product.type === "gants" && (
+            <a
+              href={
+                product.family === "mma"
+                  ? "/guides-achat/gants-mma-ou-gants-de-boxe"
+                  : "/guides-achat/quelle-taille-de-gants-de-boxe-choisir"
+              }
+              style="color:var(--muted)"
+            >
+              Guide des tailles
+            </a>
+          )
+        }
       </div>
       <div class="sizes">
         {product.sizes.map((s) => <button class="size" disabled>{s}</button>)}
@@ -77,7 +105,25 @@ const crumbs = {
       <p>{product.use}</p>
       <h2 style="font-size:18px;margin:28px 0 8px">Entretien</h2>
       <p>{product.care}</p>
-      <p><a href="/guides-achat">Voir les guides d'achat</a></p>
+      {
+        guideList.length > 0 && (
+          <section class="seo-block" style="margin-top:28px;padding-top:8px">
+            <h2 style="font-size:18px;margin:0 0 12px">Guides liés</h2>
+            <ul class="seo-links">
+              {guideList.map((g) => (
+                <li>
+                  <a href={`/guides-achat/${g.slug}`}>{g.title}</a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+      <p>
+        <a href={catHref}>Voir toute la catégorie</a>
+        {" · "}
+        <a href="/guides-achat">Tous les guides d'achat</a>
+      </p>
     </div>
   </div>
   <section class="page">
@@ -87,7 +133,7 @@ const crumbs = {
         more.map((p) => (
           <a href={`/p/${p.slug}`} class="product-card">
             <div class="thumb">
-              <img src={p.image} alt={p.name} loading="lazy" decoding="async" />
+              <img src={p.image} alt={`${p.name} ${p.brand}`} loading="lazy" decoding="async" />
             </div>
             <h3>{p.name}</h3>
             <div class="price">{formatPrice(p.price)}</div>

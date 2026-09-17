@@ -1,8 +1,17 @@
 ---
 import Layout from "../layouts/Layout.astro"
 import ListingFilters from "../components/ListingFilters.tsx"
-import { CATEGORIES, formatPrice } from "../data/nav.js"
+import { CATEGORIES, SITE, formatPrice } from "../data/nav.js"
 import { productsFor } from "../data/products.js"
+import { GUIDES } from "../data/guides.js"
+import {
+  CATEGORY_FAQS,
+  CATEGORY_GUIDES,
+  absoluteUrl,
+  breadcrumbLd,
+  faqLd,
+  itemListLd,
+} from "../data/seo.js"
 
 export function getStaticPaths() {
   return Object.keys(CATEGORIES).map((slug) => ({ params: { slug } }))
@@ -21,18 +30,23 @@ const cat = CATEGORIES[slug]
 if (!cat) throw new Error("Catégorie inconnue")
 const items = productsFor(slug)
 const types = [...new Set(items.map((p) => TYPE_LABEL[p.type] || p.type))]
-const crumbs = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Accueil", item: "https://www.matos-de-boxe.fr/" },
-    { "@type": "ListItem", position: 2, name: cat.h1, item: `https://www.matos-de-boxe.fr/${slug}` },
-  ],
-}
+const faqs = CATEGORY_FAQS[slug] || []
+const guideSlugs = CATEGORY_GUIDES[slug] || []
+const relatedGuides = guideSlugs.map((s) => GUIDES.find((g) => g.slug === s)).filter(Boolean)
+const pageUrl = absoluteUrl(`/${slug}`)
+
+const crumbs = breadcrumbLd([
+  { name: "Accueil", item: `${SITE.url}/` },
+  { name: cat.h1, item: pageUrl },
+])
+const collection = itemListLd(cat.h1, pageUrl, items)
+const faqSchema = faqLd(faqs)
 ---
 
 <Layout title={cat.title} description={cat.intro}>
   <script type="application/ld+json" set:html={JSON.stringify(crumbs)} />
+  <script type="application/ld+json" set:html={JSON.stringify(collection)} />
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
   <div class="page">
     <p class="crumb"><a href="/">Accueil</a> / {cat.h1}</p>
     <div class="listing-head">
@@ -47,7 +61,7 @@ const crumbs = {
         items.map((p) => (
           <a href={`/p/${p.slug}`} class="product-card" data-product-type={TYPE_LABEL[p.type] || p.type}>
             <div class="thumb">
-              <img src={p.image} alt={p.name} loading="lazy" decoding="async" />
+              <img src={p.image} alt={`${p.name} ${p.brand} — ${p.category}`} loading="lazy" decoding="async" />
             </div>
             <h3>{p.name}</h3>
             <div class="cat">{p.category}</div>
@@ -65,5 +79,44 @@ const crumbs = {
         <p class="empty">Catalogue en cours d’intégration pour cette catégorie.</p>
       )
     }
+
+    {
+      relatedGuides.length > 0 && (
+        <section class="seo-block">
+          <h2>Guides pour bien choisir</h2>
+          <ul class="seo-links">
+            {relatedGuides.map((g) => (
+              <li>
+                <a href={`/guides-achat/${g.slug}`}>{g.title}</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      faqs.length > 0 && (
+        <section class="seo-block seo-faq">
+          <h2>Questions fréquentes — {cat.h1}</h2>
+          {faqs.map((f) => (
+            <details>
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
+        </section>
+      )
+    }
+
+    <section class="seo-block">
+      <h2>{cat.h1} en France</h2>
+      <p>
+        Sur matos-de-boxe.fr tu trouves une sélection {cat.h1.toLowerCase()} Metal Boxe, rédigée pour les pratiquants :
+        usage, tailles, niveau. Les prix affichés sont indicatifs tant que la vente nationale n’est pas ouverte.
+        En attendant, lis les <a href="/guides-achat">guides d’achat</a> et laisse ton e-mail sur les fiches qui
+        t’intéressent.
+      </p>
+    </section>
   </div>
 </Layout>

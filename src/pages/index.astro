@@ -160,11 +160,26 @@ const orgLd = {
   url: SITE.url,
   description: SITE.description,
   slogan: SITE.tagline,
+  areaServed: { "@type": "Country", name: "France" },
+  inLanguage: "fr-FR",
+}
+const websiteLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE.name,
+  url: SITE.url,
+  description: SITE.description,
+  inLanguage: "fr-FR",
+  publisher: { "@type": "Organization", name: SITE.name, url: SITE.url },
 }
 ---
 
-<Layout title={`Matos de boxe | ${SITE.tagline}`} description={SITE.description}>
+<Layout
+  title={`Matos de boxe | Équipement boxe et MMA en France`}
+  description={SITE.description}
+>
   <script type="application/ld+json" set:html={JSON.stringify(orgLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />
   <HeroCarousel client:load slides={slides} />
 
   {categoryBands.map((band) => <CategoryBand {...band} />)}

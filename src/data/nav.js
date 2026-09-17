@@ -4,7 +4,7 @@ export const SITE = {
   url: "https://www.matos-de-boxe.fr",
   tagline: "L'équipement des combattants",
   description:
-    "Boutique spécialisée dans le matos de boxe, les gants MMA, les protections et le matériel de sports de combat. Catalogue Metal Boxe, ouverture de la vente prochaine.",
+    "Boutique spécialisée matos de boxe, gants MMA, protections et matériel de sports de combat en France. Catalogue Metal Boxe, ouverture de la vente prochaine.",
 }
 
 export const NAV = [
@@ -180,93 +180,105 @@ export const NAV = [
 export const CATEGORIES = {
   nouveau: {
     slug: "nouveau",
-    title: "Nouveau matos de boxe et MMA",
+    title: "Nouveautés matos de boxe et MMA | France",
     h1: "Nouveautés",
-    intro: "Les dernières arrivées Metal Boxe : gants, protections et textile de combat. Catalogue en cours d’intégration, vente bientôt ouverte.",
+    intro:
+      "Dernières arrivées Metal Boxe : gants de boxe, gants MMA, protections et textile. Catalogue national matos-de-boxe.fr, vente bientôt ouverte.",
     filter: () => true,
   },
   "matos-de-boxe": {
     slug: "matos-de-boxe",
-    title: "Matos de boxe — équipement et matériel",
+    title: "Matos de boxe — équipement et matériel | France",
     h1: "Matos de boxe",
-    intro: "Tout le matos de boxe pour s’entraîner et sparrer : gants, protections, sacs et accessoires. Sélection Metal Boxe, pensé pour le pratiquant.",
+    intro:
+      "Tout le matos de boxe pour s’entraîner et sparrer en France : gants, protections, sacs et accessoires Metal Boxe, pensé pour le pratiquant.",
     filter: (p) => ["boxe", "entrainement", "accessoires"].includes(p.family),
   },
   "gants-de-boxe": {
     slug: "gants-de-boxe",
-    title: "Gants de boxe — entraînement, sparring, sac",
+    title: "Gants de boxe — 10 à 16 oz, entraînement et sparring",
     h1: "Gants de boxe",
-    intro: "Gants de boxe Metal Boxe pour le sac, l’entraînement et le sparring. Du gant débutant au cuir pro, en 10 oz, 12 oz, 14 oz et 16 oz.",
+    intro:
+      "Acheter des gants de boxe Metal Boxe pour le sac, les pads et le sparring. Velcro ou cuir, 10 oz, 12 oz, 14 oz et 16 oz. Livraison France à l’ouverture des ventes.",
     filter: (p) => p.family === "boxe" && p.type === "gants",
   },
   "gants-mma": {
     slug: "gants-mma",
-    title: "Gants MMA — sparring, combat, hybrid",
+    title: "Gants MMA — sparring, combat et hybrid | Metal Boxe",
     h1: "Gants MMA",
-    intro: "Gants MMA pour le sac, le sparring et le combat. Main libre pour les saisies, mousse pensée pour encaisser les échanges.",
+    intro:
+      "Gants MMA pour le sparring et le combat : main libre pour les saisies, mousse pour encaisser. Sélection Metal Boxe sur matos-de-boxe.fr.",
     filter: (p) => p.family === "mma" && p.type === "gants",
   },
   "protections-boxe": {
     slug: "protections-boxe",
-    title: "Protections boxe — casques, dents, bandes",
+    title: "Protections boxe — casque, protège-dents, bandes",
     h1: "Protections boxe",
-    intro: "Casques, protège-dents et bandes : le trio pour sparrer sans se casser. Matériel de protection boxe Metal Boxe.",
+    intro:
+      "Casques de boxe, protège-dents et protections pour sparrer sans se casser. Matériel de protection boxe Metal Boxe, catalogue France.",
     filter: (p) => p.family === "boxe" && p.type === "protection",
   },
   "protections-mma": {
     slug: "protections-mma",
-    title: "Protections MMA — tibias, casques, coquilles",
+    title: "Protections MMA — protège-tibias, casques, genouillères",
     h1: "Protections MMA",
-    intro: "Tibias-pieds, casques, genouillères et coudières pour le MMA. Protection sans bloquer les déplacements.",
+    intro:
+      "Protège-tibias MMA, casques, genouillères et coudières. Protection pour le sparring sans bloquer les déplacements.",
     filter: (p) => p.family === "mma" && p.type === "protection",
   },
   "accessoires-boxe": {
     slug: "accessoires-boxe",
-    title: "Accessoires boxe — bandes, sous-gants, entretien",
+    title: "Accessoires boxe — bandes de boxe et sous-gants",
     h1: "Accessoires boxe",
-    intro: "Bandes, sous-gants et petits accessoires qui font la différence à l’entraînement.",
+    intro:
+      "Bandes de boxe, sous-gants et accessoires d’entraînement. Le petit matos qui protège poignets et mains à chaque séance.",
     filter: (p) => p.type === "accessoire",
   },
   "materiel-mma": {
     slug: "materiel-mma",
-    title: "Matériel MMA — gants, protections, tenue",
+    title: "Matériel MMA — gants, tibias, tenue | France",
     h1: "Matériel MMA",
-    intro: "Le matériel MMA pour débuter ou confirmer : gants, tibias, shorts et protections.",
+    intro:
+      "Matériel MMA pour débuter ou confirmer : gants MMA, protège-tibias, shorts et protections. Catalogue Metal Boxe.",
     filter: (p) => p.family === "mma",
   },
   "sports-de-combat": {
     slug: "sports-de-combat",
-    title: "Sports de combat — équipement boxe, MMA, arts martiaux",
+    title: "Équipement sports de combat — boxe, MMA, arts martiaux",
     h1: "Sports de combat",
-    intro: "Équipement pour la boxe, le MMA et les sports de combat. Une boutique nationale, un seul endroit pour le matos.",
+    intro:
+      "Équipement pour la boxe, le MMA et les sports de combat. Boutique en ligne nationale : un seul endroit pour ton matos.",
     filter: () => true,
   },
   "arts-martiaux": {
     slug: "arts-martiaux",
-    title: "Arts martiaux — kimonos, ceintures, protections",
+    title: "Arts martiaux — protections et matériel de combat",
     h1: "Arts martiaux",
-    intro: "Matériel d’arts martiaux : grappling, kimono, ceintures et protections. Catalogue en cours d’enrichissement.",
+    intro:
+      "Matériel utile aux arts martiaux et au grappling : protections, textile et accessoires. Catalogue en cours d’enrichissement.",
     filter: (p) => p.family === "arts-martiaux",
   },
   "textile-combat": {
     slug: "textile-combat",
-    title: "Textile combat — shorts, rashguards, tenues",
+    title: "Textile combat — shorts MMA et tenues d’entraînement",
     h1: "Textile combat",
-    intro: "Shorts MMA, fight shorts enfant et tenues d’entraînement Metal Boxe.",
+    intro: "Shorts MMA, fight shorts enfant et tenues d’entraînement Metal Boxe pour la salle.",
     filter: (p) => p.type === "textile",
   },
   "sacs-de-frappe": {
     slug: "sacs-de-frappe",
-    title: "Sacs de frappe et matériel d’entraînement",
+    title: "Sacs de frappe — matériel d’entraînement boxe et MMA",
     h1: "Sacs de frappe",
-    intro: "Sacs, boucliers et matériel de frappe pour la salle ou la maison. Sélection Metal Boxe à venir en stock.",
+    intro:
+      "Sacs de frappe, boucliers et matériel de frappe pour la salle ou la maison. Sélection Metal Boxe, livraison France à l’ouverture.",
     filter: (p) => p.type === "entrainement",
   },
   "equipement-debutant": {
     slug: "equipement-debutant",
-    title: "Équipement débutant boxe et MMA",
+    title: "Équipement débutant boxe et MMA — premier matos",
     h1: "Équipement débutant",
-    intro: "Le premier matos : gants, bandes, protège-dents. Pour arriver au premier cours déjà prêt.",
+    intro:
+      "Premier matos de boxe ou MMA : gants, bandes, protège-dents. Pour arriver au premier cours déjà prêt, sans suracheter.",
     filter: (p) => p.level === "debutant" || p.price < 55,
   },
 }
