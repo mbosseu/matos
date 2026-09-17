@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro"
 import HeroCarousel from "../components/HeroCarousel.tsx"
+import CategoryBand from "../components/CategoryBand.astro"
 import { SITE } from "../data/nav.js"
 import { PRODUCTS } from "../data/products.js"
 
@@ -8,60 +9,138 @@ const bySlug = (slug) => PRODUCTS.find((p) => p.slug === slug)
 
 const slides = [
   {
-    id: "hero-boxe",
-    image: (bySlug("gants-de-boxe-legacy-horse-hair-noir") || PRODUCTS[0]).image,
-    alt: (bySlug("gants-de-boxe-legacy-horse-hair-noir") || PRODUCTS[0]).name,
-    title: "Le matos des combattants",
+    id: "hero-legacy",
+    art: "/hero-stage.png",
+    image: (bySlug("protege-tibias-pieds-mma-legacy") || PRODUCTS[2]).image,
+    alt: (bySlug("protege-tibias-pieds-mma-legacy") || PRODUCTS[2]).name,
+    title: "LE MATOS DES\nCOMBATTANTS",
     text: "Gants de boxe, gants MMA, protections et équipement de sports de combat. Catalogue Metal Boxe. Vente bientôt ouverte — inscris-toi pour être prévenu.",
     cta: "Voir les gants",
     href: "/gants-de-boxe",
   },
   {
     id: "hero-mma",
-    image: (bySlug("gants-mma-the-shell-noir") || PRODUCTS[1]).image,
+    image: "/hero/mma-nobg.png",
     alt: (bySlug("gants-mma-the-shell-noir") || PRODUCTS[1]).name,
-    title: "Gants MMA, main libre",
+    title: "GANTS MMA\nMAIN LIBRE",
     text: "Sparring et combat. La mousse encaisse, les doigts restent libres pour les saisies.",
     cta: "Voir les gants MMA",
     href: "/gants-mma",
   },
   {
-    id: "hero-protect",
-    image: (bySlug("protege-tibias-pieds-mma-legacy") || PRODUCTS[2]).image,
-    alt: (bySlug("protege-tibias-pieds-mma-legacy") || PRODUCTS[2]).name,
-    title: "Ce qui te laisse revenir",
-    text: "Tibias, casques, dents. La protection sans bloquer les déplacements.",
-    cta: "Voir les protections",
-    href: "/protections-mma",
+    id: "hero-boxe",
+    image: "/hero/boxe-nobg.png",
+    alt: (bySlug("gants-de-boxe-legacy-horse-hair-noir") || PRODUCTS[0]).name,
+    title: "LEGACY\nHORSE HAIR",
+    text: "Le gant signature Metal Boxe : densité, maintien et finition premium pour les rounds qui comptent.",
+    cta: "Voir les gants",
+    href: "/gants-de-boxe",
   },
 ]
 
-const featured = [
+const gantsBoxe = bySlug("gants-de-boxe-ergo90-miami-vibe-noir") || bySlug("gants-de-boxe-legacy-horse-hair-noir")
+const gantsMma = bySlug("gants-mma-the-shell-noir") || bySlug("gants-mma-combat-legacy")
+const tibias = bySlug("protege-tibias-pieds-mma-legacy")
+const casque = bySlug("casque-barre-polycarbonate-noir")
+const bandes = bySlug("bandes-de-boxe-elastiques-oko")
+
+const categoryBands = [
   {
-    p: bySlug("gants-de-boxe-ergo90-miami-vibe-noir"),
-    eyebrow: "Gants de boxe",
-    title: "Le premier matos. Celui qui reste dans le sac.",
+    index: "01",
+    category: "Gants de boxe",
+    titleLine1: "Le premier matos.",
+    titleLine2: "Celui qui reste dans le sac.",
     href: "/gants-de-boxe",
+    image: "/hero/boxe-nobg.png",
+    imageAlt: gantsBoxe?.name || "Gants de boxe",
+    watermark: "BOXE",
+    sideLabel: "Fight Different",
+    bgImage: "/ref-bands/bg-01.jpg",
+    theme: "light",
+    flip: false,
+    features: [
+      { label: "Confort optimal", icon: "shield" },
+      { label: "Haute résistance", icon: "gem" },
+      { label: "Livraison rapide", icon: "truck" },
+    ],
   },
   {
-    p: bySlug("gants-mma-the-shell-noir"),
-    eyebrow: "Gants MMA",
-    title: "Sparrer sans se casser les mains.",
+    index: "02",
+    category: "Gants MMA",
+    titleLine1: "Sparrer sans se",
+    titleLine2: "casser les mains.",
     href: "/gants-mma",
+    image: "/hero/mma-nobg.png",
+    imageAlt: gantsMma?.name || "Gants MMA",
+    watermark: "MMA",
+    sideLabel: "",
+    bgImage: "/ref-bands/bg-02.jpg",
+    theme: "dark",
+    flip: true,
+    features: [
+      { label: "Protection maximale", icon: "shield" },
+      { label: "Matériau premium", icon: "gem" },
+      { label: "Livraison rapide", icon: "truck" },
+    ],
   },
   {
-    p: bySlug("protege-tibias-pieds-mma-legacy"),
-    eyebrow: "Protections",
-    title: "Tibias, casque, dents : le trio qui sauve les séances.",
+    index: "03",
+    category: "Protège-tibias",
+    titleLine1: "Protégez vos tibias.",
+    titleLine2: "Avancez sans limite.",
     href: "/protections-mma",
+    image: "/hero/tibias-nobg.png",
+    imageAlt: tibias?.name || "Protège-tibias",
+    watermark: "PROTECTION",
+    sideLabel: "Discipline\nPerformance\nRésultats",
+    bgImage: "/ref-bands/bg-03.jpg",
+    theme: "light",
+    flip: false,
+    features: [
+      { label: "Absorption des chocs", icon: "shield" },
+      { label: "Légèreté et confort", icon: "gem" },
+      { label: "Livraison rapide", icon: "truck" },
+    ],
   },
   {
-    p: bySlug("casque-barre-polycarbonate-noir"),
-    eyebrow: "Équipement débutant",
-    title: "S’équiper pour le premier cours, sans se tromper.",
-    href: "/equipement-debutant",
+    index: "04",
+    category: "Casques",
+    titleLine1: "Sécurité et confort",
+    titleLine2: "à chaque round.",
+    href: "/protections-boxe",
+    image: "/hero/casque-nobg.png",
+    imageAlt: casque?.name || "Casque de boxe",
+    watermark: "CASQUE",
+    sideLabel: "Plus qu'un sport\nun état d'esprit",
+    bgImage: "/ref-bands/bg-04.jpg",
+    theme: "dark",
+    flip: true,
+    features: [
+      { label: "Protection maximale", icon: "shield" },
+      { label: "Confort premium", icon: "gem" },
+      { label: "Livraison rapide", icon: "truck" },
+    ],
   },
-].filter((x) => x.p)
+  {
+    index: "05",
+    category: "Bandes de boxe",
+    titleLine1: "Maintien optimal",
+    titleLine2: "pour protéger vos mains.",
+    href: "/accessoires-boxe",
+    image: "/hero/bandes-nobg.png",
+    imageAlt: bandes?.name || "Bandes de boxe",
+    watermark: "BANDES",
+    sideLabel: "Prépare\nCombat\nProgresse",
+    bgImage: "/ref-bands/bg-05.jpg",
+    theme: "light",
+    flip: false,
+    features: [
+      { label: "Stabilité du poignet", icon: "shield" },
+      { label: "Tissu premium", icon: "gem" },
+      { label: "Livraison rapide", icon: "truck" },
+    ],
+  },
+].filter((s) => s.image)
 
 const iconic = [
   { href: "/gants-de-boxe", label: "Gants de boxe", img: PRODUCTS[0].image },
@@ -73,6 +152,7 @@ const iconic = [
   { href: "/equipement-debutant", label: "Débutant", img: PRODUCTS.find((p) => p.slug.includes("enfant") && p.type === "gants").image },
   { href: "/guides-achat", label: "Guides", img: PRODUCTS.find((p) => p.slug.includes("apollon")).image },
 ]
+
 const orgLd = {
   "@context": "https://schema.org",
   "@type": "Store",
@@ -87,37 +167,7 @@ const orgLd = {
   <script type="application/ld+json" set:html={JSON.stringify(orgLd)} />
   <HeroCarousel client:load slides={slides} />
 
-  <section class="featured">
-    {
-      featured.map((c) => (
-        <article class="card-feature">
-          <img src={c.p.image} alt={`${c.eyebrow} — ${c.p.name}`} loading="lazy" decoding="async" />
-          <div class="copy">
-            <div class="eyebrow">{c.eyebrow}</div>
-            <h3>{c.title}</h3>
-            <div class="actions">
-              <a class="btn" href={c.href}>
-                Découvrir
-              </a>
-            </div>
-          </div>
-        </article>
-      ))
-    }
-  </section>
-
-  <section class="banner">
-    <img src={PRODUCTS.find((p) => p.slug === "gants-mma-combat-legacy").image} alt="Gants MMA Legacy Metal Boxe" loading="lazy" decoding="async" />
-    <div class="copy">
-      <h2>
-        Gants MMA Legacy
-        <br />
-        Sparring et combat
-      </h2>
-      <p>La ligne Metal Boxe pour ceux qui enchaînent les rounds.</p>
-      <a class="btn" href="/gants-mma">Voir les gants MMA</a>
-    </div>
-  </section>
+  {categoryBands.map((band) => <CategoryBand {...band} />)}
 
   <section class="iconic">
     <h2>Les indispensables</h2>
@@ -133,18 +183,30 @@ const orgLd = {
     </div>
   </section>
 
-  <section class="page" style="padding-top:24px">
-    <h2 class="page-title">Pourquoi matos-de-boxe.fr</h2>
-    <div class="prose">
-      <p>
-        On équipe les pratiquants, pas les vitrines. Ici tu trouves du <strong>matos de boxe</strong> et du
-        <strong>matériel MMA</strong> Metal Boxe : gants, protections, textile. Les fiches sont écrites comme on
-        parle au bord du ring — tailles, usage, niveau.
-      </p>
-      <p>
-        La boutique prépare son ouverture nationale. Les articles sont visibles, les commandes pas encore ouvertes.
-        En attendant, lis les <a href="/guides-achat">guides d'achat</a> et laisse ton e-mail sur les fiches qui t’intéressent.
-      </p>
+  <section class="why-band">
+    <div class="why-band__inner">
+      <div class="why-band__meta">
+        <span class="why-band__num">06</span>
+        <span class="why-band__rule" aria-hidden="true"></span>
+      </div>
+      <p class="why-band__cat">La boutique</p>
+      <h2 class="why-band__title">
+        <span class="why-band__title-a">Pourquoi</span>
+        <span class="why-band__title-b">matos-de-boxe.fr</span>
+      </h2>
+      <div class="why-band__prose">
+        <p>
+          On équipe les pratiquants, pas les vitrines. Ici tu trouves du <strong>matos de boxe</strong> et du
+          <strong> matériel MMA</strong> Metal Boxe : gants, protections, textile. Les fiches sont écrites comme on
+          parle au bord du ring — tailles, usage, niveau.
+        </p>
+        <p>
+          La boutique prépare son ouverture nationale. Les articles sont visibles, les commandes pas encore ouvertes.
+          En attendant, lis les <a href="/guides-achat">guides d'achat</a> et laisse ton e-mail sur les fiches qui
+          t’intéressent.
+        </p>
+      </div>
+      <a class="btn why-band__cta" href="/guides-achat">Voir les guides →</a>
     </div>
   </section>
 </Layout>

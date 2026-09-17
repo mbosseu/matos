@@ -1,0 +1,97 @@
+---
+/**
+ * Unified premium category band — matches ChatGPT ref 14_22_20.
+ * theme: "light" | "dark"
+ * flip: product left / copy right (dark bands)
+ */
+const {
+  index = "01",
+  category,
+  titleLine1,
+  titleLine2,
+  href,
+  image,
+  imageAlt,
+  watermark,
+  sideLabel = "",
+  bgImage = "",
+  theme = "light",
+  flip = false,
+  features = [
+    { label: "Protection maximale", icon: "shield" },
+    { label: "Matériau premium", icon: "gem" },
+    { label: "Livraison rapide", icon: "truck" },
+  ],
+  cta = "Découvrir",
+} = Astro.props
+---
+
+<section
+  class:list={["cat-band", `cat-band--${theme}`, flip && "cat-band--flip"]}
+  style={bgImage ? `--cat-bg: url('${bgImage}')` : undefined}
+>
+  <div class="cat-band__stage" aria-hidden="true">
+    <div class="cat-band__photo"></div>
+    <div class="cat-band__veil"></div>
+  </div>
+
+  <div class="cat-band__inner">
+    <div class="cat-band__copy">
+      <div class="cat-band__meta">
+        <span class="cat-band__num">{index}</span>
+        <span class="cat-band__rule" aria-hidden="true"></span>
+      </div>
+      <p class="cat-band__cat">{category}</p>
+      <h2 class="cat-band__title">
+        <span class="cat-band__title-a">{titleLine1}</span>
+        <span class="cat-band__title-b">{titleLine2}</span>
+      </h2>
+      <ul class="cat-band__features">
+        {
+          features.map((f) => (
+            <li>
+              <span class="cat-band__feature-icon" aria-hidden="true">
+                {f.icon === "gem" ? (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3.5 4 9.2l8 11.3 8-11.3L12 3.5z" />
+                    <path d="M4 9.2h16" />
+                    <path d="m12 3.5 0 17" />
+                  </svg>
+                ) : f.icon === "truck" ? (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 7.5h11v8H3z" />
+                    <path d="M14 10.5h3.2L20 13v2.5h-1.2" />
+                    <circle cx="16.8" cy="16.6" r="1.4" />
+                    <circle cx="7.2" cy="16.6" r="1.4" />
+                    <path d="M3 15.5h2.2" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3 5.5 5.5v5.2c0 4.2 2.8 7.9 6.5 9.3 3.7-1.4 6.5-5.1 6.5-9.3V5.5L12 3z" />
+                  </svg>
+                )}
+              </span>
+              <span class="cat-band__feature-label">{f.label}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="cat-band__cta" href={href}>
+        {cta}
+        <span class="cat-band__cta-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <div class="cat-band__visual" aria-hidden="true">
+      <span class="cat-band__watermark">{watermark}</span>
+      <div class="cat-band__beams"></div>
+      <div class="cat-band__splash"></div>
+      <img class="cat-band__product" src={image} alt={imageAlt || ""} loading="lazy" decoding="async" />
+      {
+        sideLabel && (
+          <p class="cat-band__side" set:html={sideLabel.replace(/\n/g, "<br />")} />
+        )
+      }
+    </div>
+  </div>
+</section>
